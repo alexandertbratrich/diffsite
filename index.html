@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta content="text/html; charset=UTF-8; X-Content-Type-Options=nosniff" http-equiv="Content-Type" />
+
+  <title>Diffsite</title>
+
+  <link rel="stylesheet" type="text/css" href="main.css">
+</head>
+<body>
+<div id="app">
+  <div id="settings">
+    <div class="segment website">
+      <span class="labels"><label for="page1">Website 1</label><label for="offset1">Offset</label></span>
+      <div class="buttons">
+        <input type="text" name="page1" id="page1" v-model="page1">
+        <input type="number" name="offset1" id="offset1" v-model="offset1" :size="Math.max((offset1.length+2) || 2)">
+      </div>
+    </div>
+    <div class="segment settings">
+      <label for="width">Viewport Width</label>
+      <div class="buttons">
+        <div class="button" @click="toggleWidthMode()">
+          <p v-if="width_mode=='auto'">Auto</p>
+          <p v-else-if="width_mode=='custom'">Custom</p>
+          <p v-else-if="width_mode=='fixed'">Fixed</p>
+        </div>
+        <input v-if="width_mode=='custom'" type="number" name="width" min="1" size="4" v-model="width">
+        <select v-model="width" v-if="width_mode=='fixed'">
+          <option value="360">360px</option>
+          <option value="640">640px</option>
+          <option value="768">768px</option>
+          <option value="960">960px</option>
+          <option value="992">992px</option>
+          <option value="1024">1024px</option>
+          <option value="1200">1200px</option>
+          <option value="1600">1600px</option>
+        </select>
+      </div>
+    </div>
+    <div class="segment settings">
+      <label for="comp_mode">Comparison Mode</label>
+      <div class="buttons">
+        <div @click="comp_mode=!comp_mode" name="comp_mode" class="button"><p v-if="comp_mode">Overlay</p><p v-else>Side by Side</p></div>
+        <div @click="toggleOverlayMode()" v-if="comp_mode" name="overlay_mode" class="button">
+          <p v-if="overlay_mode=='blend'">Blend</p>
+          <p v-if="overlay_mode=='swipe'">Swipe</p>
+          <p v-if="overlay_mode=='onion'">Onion</p>
+        </div>
+        <input v-if="comp_mode && (overlay_mode!=='swipe')" v-model="opacity" type="range" min="0" max="1" step="0.1">
+        <span v-if="comp_mode && (overlay_mode!=='swipe')" class="op_val">{{(opacity*100).toFixed(0)+'%'}}</span>
+      </div>
+    </div>
+    <div class="segment website">
+      <span class="labels"><label for="page2">Website 2</label><label for="offset2">Offset</label></span>
+      <div class="buttons">
+        <input type="text" name="page2" id="page2" v-model="page2">
+        <input type="number" name="offset2" id="offset2" v-model="offset2" :size="Math.max((offset2.length+2) || 2)">
+      </div>
+    </div>
+  </div>
+  <main id="main" :class="[{'blend': comp_mode && overlay_mode == 'blend'}, {'onion': comp_mode && overlay_mode == 'onion'}]"
+    :style="{'width': containerWidth}">
+    <iframe id="page1" class="page" :style="{'width': pageWidth(1), 'top': page1Offset}"
+      :src="page1"
+      >
+    </iframe>
+    <div :class="{'swipe': comp_mode && overlay_mode=='swipe'}" :style="[swipeStyle]">
+      <iframe id="page2" class="page" :style="[{'width': pageWidth(2), 'top': page2Offset, 'opacity': getOpacity}]"
+      :src="page2"
+      sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+      >
+      </iframe>
+    </div>
+    <input type="range" name="slider" min="0" max="1" step="0.01" v-model="slider" id="slider" v-if="comp_mode && (overlay_mode=='swipe')">
+  </main>
+  <p style="position: sticky; width: 50%; left: 25%; top: calc(100% - 12px); background-color: #333;">todo: fixed/auto height(remove scroll), cookie-problem, slider scroll problem {{page1isScroll}},{{page2isScroll}}</p>
+</div>
+
+<script src="vue.js"></script>
+<script src="main.js"></script>
+
+</body>
+</html>
