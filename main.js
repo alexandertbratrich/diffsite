@@ -1,17 +1,12 @@
-/*
-https://dekanta.com/japanese-whisky-cocktail-recipes/
-*/
-
 let app = new Vue({
   el: '#app',
   data: {
     page1: '',
     page2: '',
-    // https://web.archive.org/web/20111203000118/http://www.google.com/
     width_mode: 'auto',
     width: 360,
     comp_mode: false,
-    overlay_mode: 'blend', // swipe, blend, onion
+    overlay_mode: 'blend',
     opacity: 1,
     slider: 0.5,
     offset1: 0,
@@ -62,12 +57,6 @@ let app = new Vue({
     page2Offset () {
       return (4 - Number(this.offset2)) + 'px'
     },
-    /*viewportWidth () {
-      return document.documentElement.clientWidth 
-    },
-    viewportHeight () {
-      return Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
-    },*/
     swipeStyle () {
       if (this.comp_mode && this.overlay_mode=='swipe') {
         if (this.width_mode == 'auto')
@@ -85,17 +74,6 @@ let app = new Vue({
       } else {
         return (this.width*2+4)+'px'
       }
-    },
-    page1isScroll () {
-      let p = document.getElementById('page1')
-      //return p.scrollHeight > p.clientHeight
-      return (p.scrollHeight > p.offsetHeight) || (p.scrollHeight > p.clientHeight)
-    },
-    page2isScrolll () {
-      let p = document.getElementById('page2')
-      console.log(p)
-      return p.contentWindow.document.documentElement.scrollHeight > p.contentWindow.document.documentElement.offsetHeight ? 1 : 0;
-      //return (p.scrollHeight > p.offsetHeight) || (p.scrollHeight > p.clientHeight)
     }
   },
   methods: {
